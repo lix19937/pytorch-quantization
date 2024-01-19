@@ -30,11 +30,12 @@ from pytorch_quantization.tensor_quant import fake_tensor_quant
 from pytorch_quantization import nn as quant_nn
 from pytorch_quantization import utils as quant_utils
 
+# 权重标定    
 __all__ = ["HistogramCalibrator", "calibrate_weights"]
 
 class HistogramCalibrator(_Calibrator):
     """Unified histogram calibrator
-
+              执行1次收集， 基于 交叉熵 统计百分数 平方差 计算 amax  
     Histogram will be only collected once. compute_amax() performs entropy, percentile, or mse
         calibration based on arguments
 
@@ -42,7 +43,7 @@ class HistogramCalibrator(_Calibrator):
         num_bits: An integer. Number of bits of quantization.
         axis: A tuple. see QuantDescriptor.
         unsigned: A boolean. using unsigned quantization.
-        num_bins: An integer. Number of histograms bins. Default 2048.
+        num_bins: An integer. Number of histograms bins. Default 2048.  bins 数目  
         grow_method: A string. DEPRECATED. default None.
         skip_zeros: A boolean. If True, skips zeros when collecting data for histogram. Default False.
         torch_hist: A boolean. If True, collect histogram by torch.histc instead of np.histogram. If input tensor
@@ -72,7 +73,7 @@ class HistogramCalibrator(_Calibrator):
                 ("Calibrator encountered negative values. It shouldn't happen after ReLU. "
                  "Make sure this is the right tensor to calibrate."),
                 1)
-            x = x.abs()
+            x = x.abs()# 获得整数   
 
         x = x.float()
 
