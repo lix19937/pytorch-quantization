@@ -43,7 +43,7 @@ class HistogramCalibrator(_Calibrator):
         num_bits: An integer. Number of bits of quantization.
         axis: A tuple. see QuantDescriptor.
         unsigned: A boolean. using unsigned quantization.
-        num_bins: An integer. Number of histograms bins. Default 2048.  bins 数目  
+        num_bins: An integer. Number of histograms bins. Default 2048.  bins 数目   即 直方图的区间数
         grow_method: A string. DEPRECATED. default None.
         skip_zeros: A boolean. If True, skips zeros when collecting data for histogram. Default False.
         torch_hist: A boolean. If True, collect histogram by torch.histc instead of np.histogram. If input tensor
@@ -88,9 +88,9 @@ class HistogramCalibrator(_Calibrator):
                 self._calib_hist, self._calib_bin_edges = np.histogram(x_np, bins=self._num_bins)
             else:
                 temp_amax = np.max(x_np)
-                if temp_amax > self._calib_bin_edges[-1]:
+                if temp_amax > self._calib_bin_edges[-1]:   # 
                     # increase the number of bins
-                    width = self._calib_bin_edges[1] - self._calib_bin_edges[0]
+                    width = self._calib_bin_edges[1] - self._calib_bin_edges[0]  #  range  
                     # NOTE: np.arange may create an extra bin after the one containing temp_amax
                     new_bin_edges = np.arange(self._calib_bin_edges[-1] + width, temp_amax + width, width)
                     self._calib_bin_edges = np.hstack((self._calib_bin_edges, new_bin_edges))
