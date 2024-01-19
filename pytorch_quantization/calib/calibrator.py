@@ -17,7 +17,7 @@
 
 
 """Abstract base class for calibrators"""
-
+# 基类    
 
 class _Calibrator():
     """Abstract base class of calibrators
