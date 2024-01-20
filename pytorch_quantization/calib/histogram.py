@@ -139,7 +139,7 @@ class HistogramCalibrator(_Calibrator):
         Returns:
             amax: a tensor
         """
-        if isinstance(self._calib_hist, torch.Tensor): # 是tensor 类型时候   
+        if isinstance(self._calib_hist, torch.Tensor): # 是tensor 类型时候转numpy     
             calib_hist = self._calib_hist.int().cpu().numpy()
             calib_bin_edges = self._calib_bin_edges.cpu().numpy()
         else:
@@ -178,25 +178,29 @@ class HistogramCalibrator(_Calibrator):
         return s.format(**self.__dict__)
     # pylint:enable=missing-docstring
 
-
+# 收集器 与 标定器    
 # Ideally, we want to decouple collector (collect histogram) and calibrator (compute amax) as opposed to
 # the current calibrator design. The following compute amax functions are broken out from the calibrator
 # as first step towards there.
 def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, stride=1, start_bin=128):
     """Returns amax that minimizes KL-Divergence of the collected histogram"""
-
+    # 基于收集的直方图来最小化 kl 散度    （calib_hist, calib_bin_edges 来自直方图收集器 ）
+    
     # If calibrator hasn't collected any data, return none
     if calib_bin_edges is None and calib_hist is None:
         return None
-
+        
+    # 距离归一化   
     def _normalize_distr(distr):
         summ = np.sum(distr)
         if summ != 0:
             distr = distr / summ
 
+    # 各区间统计的数目 int类型  
     bins = calib_hist[:]
-    bins[0] = bins[1]
+    bins[0] = bins[1] # ？  
 
+    # 
     total_data = np.sum(bins)
 
     divergences = []
@@ -212,8 +216,8 @@ def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, strid
 
     for i in range(starting, stop + 1, stride):
         new_density_counts.fill(0)
-        space = np.linspace(0, i, num=nbins + 1)
-        digitized_space = np.digitize(range(i), space) - 1
+        space = np.linspace(0, i, num=nbins + 1)  #  存在浮点  
+        digitized_space = np.digitize(range(i), space) - 1  # 
 
         digitized_space[bins[:i] == 0] = -1
 
@@ -271,19 +275,15 @@ def _compute_amax_mse(calib_hist, calib_bin_edges, num_bits, unsigned, stride=1,
     arguments = []
 
     for i in range(start_bin, len(centers), stride):
-
         amax = centers[i]
         quant_centers = fake_tensor_quant(centers, amax, num_bits, unsigned)
-
         mse = ((quant_centers - centers)**2 * counts).mean()
-
         mses.append(mse.cpu())
         arguments.append(i)
 
     logging.debug("mses={}".format(mses))
     argmin = np.argmin(mses)
     calib_amax = centers[arguments[argmin]]
-
     return calib_amax
 
 def _compute_amax_percentile(calib_hist, calib_bin_edges, percentile):
