@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+# from lix 2024-01-19
 
 
 """Histogram based calibrators"""
@@ -30,7 +30,7 @@ from pytorch_quantization.tensor_quant import fake_tensor_quant
 from pytorch_quantization import nn as quant_nn
 from pytorch_quantization import utils as quant_utils
 
-# 权重标定    
+# 权重标定    和输入无关    
 __all__ = ["HistogramCalibrator", "calibrate_weights"]
 
 class HistogramCalibrator(_Calibrator):
@@ -54,7 +54,7 @@ class HistogramCalibrator(_Calibrator):
         self._num_bins = num_bins
         self._skip_zeros = skip_zeros
 
-        self._calib_bin_edges = None
+        self._calib_bin_edges = None  # 会保存历史 x的 划分区间  
         self._calib_hist = None
 
         self._torch_hist = torch_hist
@@ -73,7 +73,7 @@ class HistogramCalibrator(_Calibrator):
                 ("Calibrator encountered negative values. It shouldn't happen after ReLU. "
                  "Make sure this is the right tensor to calibrate."),
                 1)
-            x = x.abs()# 获得整数   
+            x = x.abs()   # 获得整数   
 
         x = x.float()
 
@@ -87,16 +87,16 @@ class HistogramCalibrator(_Calibrator):
                 # first time it uses num_bins to compute histogram.
                 self._calib_hist, self._calib_bin_edges = np.histogram(x_np, bins=self._num_bins)
             else:
-                temp_amax = np.max(x_np)
+                temp_amax = np.max(x_np)  # x_np的最大值，是一个单独的浮点数字   
                 if temp_amax > self._calib_bin_edges[-1]:   # 
                     # increase the number of bins
-                    width = self._calib_bin_edges[1] - self._calib_bin_edges[0]  #  range  
+                    width = self._calib_bin_edges[1] - self._calib_bin_edges[0]  # 计算范围     
                     # NOTE: np.arange may create an extra bin after the one containing temp_amax
-                    new_bin_edges = np.arange(self._calib_bin_edges[-1] + width, temp_amax + width, width)
-                    self._calib_bin_edges = np.hstack((self._calib_bin_edges, new_bin_edges))
-                hist, self._calib_bin_edges = np.histogram(x_np, bins=self._calib_bin_edges)
-                hist[:len(self._calib_hist)] += self._calib_hist
-                self._calib_hist = hist
+                    new_bin_edges = np.arange(self._calib_bin_edges[-1] + width, temp_amax + width, width) # 拓展区域 
+                    self._calib_bin_edges = np.hstack((self._calib_bin_edges, new_bin_edges)) # 水平方向拼接  
+                hist, self._calib_bin_edges = np.histogram(x_np, bins=self._calib_bin_edges) # 再次进入 直方图统计  
+                hist[:len(self._calib_hist)] += self._calib_hist # 累加历史_calib_hist 内容 
+                self._calib_hist = hist # 更新到 _calib_hist   
         else:
             # This branch of code is designed to match numpy version as close as possible
             with torch.no_grad():
@@ -129,7 +129,7 @@ class HistogramCalibrator(_Calibrator):
         """Compute the amax from the collected histogram
 
         Args:
-            method: A string. One of ['entropy', 'mse', 'percentile']
+            method: A string. One of ['entropy', 'mse', 'percentile']  # 百分位数
 
         Keyword Arguments:
             stride: An integer. Default 1
@@ -139,7 +139,7 @@ class HistogramCalibrator(_Calibrator):
         Returns:
             amax: a tensor
         """
-        if isinstance(self._calib_hist, torch.Tensor):
+        if isinstance(self._calib_hist, torch.Tensor): # 是tensor 类型时候   
             calib_hist = self._calib_hist.int().cpu().numpy()
             calib_bin_edges = self._calib_bin_edges.cpu().numpy()
         else:
