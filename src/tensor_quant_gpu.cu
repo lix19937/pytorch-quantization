@@ -37,12 +37,12 @@ __device__ float fake_tensor_quant_device(float input, float amax, int min_bound
     return 0.f;
   }
 
-  float scale = max_bound / amax;
-  float output = rint(input * scale);
+  float scale = max_bound / amax; // 得到 scale 值   
+  float output = rint(input * scale); // rint     得到 int8 依然使用fp32来存储  
   output = output > max_bound ? max_bound : output;
   output = output < min_bound ? min_bound : output;
 
-  return output / scale;
+  return output / scale; // 又反量化得到 fp32 值
 }
 
 template <typename T>
@@ -102,7 +102,7 @@ __global__ void fake_tensor_quant_with_axis_cuda_kernel(const T* inputs, size_t 
     if (is_unsigned) {
       CUDA_KERNEL_ASSERT(inputs[idx] >= 0);
     }
-    int axis_idx = (idx / outer_size) % axis_size;
+    int axis_idx = (idx / outer_size) % axis_size; //// 
 
     outputs[idx] = fake_tensor_quant_device((float)inputs[idx], amax[axis_idx], min_bound, max_bound);
   }
@@ -112,10 +112,10 @@ at::Tensor fake_tensor_quant_with_axis_cuda(at::Tensor inputs, at::Tensor amax, 
                                             int num_bits = 8, bool is_unsigned = false,
                                             bool narrow_range = true) {
   auto outputs = torch::empty_like(inputs);
-  size_t numel = inputs.numel();
+  size_t numel = inputs.numel();// 元素总数目  
   int axis_size = inputs.size(axis);
 
-  int outer_size = inputs.stride(axis);
+  int outer_size = inputs.stride(axis);//  
 
   AT_DISPATCH_FLOATING_TYPES_AND_HALF(inputs.type().scalarType(), "fake_tensor_quant_cuda_with_axis", [&] {
     fake_tensor_quant_with_axis_cuda_kernel<<<numel / (BLOCK_SIZE * 4) + 1, BLOCK_SIZE>>>(
