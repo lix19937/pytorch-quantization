@@ -200,7 +200,7 @@ def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, strid
     bins = calib_hist[:]
     bins[0] = bins[1] # ？  
 
-    # 
+    # 总的数据数目  
     total_data = np.sum(bins)
 
     divergences = []
@@ -267,9 +267,9 @@ def _compute_amax_mse(calib_hist, calib_bin_edges, num_bits, unsigned, stride=1,
     if calib_bin_edges is None and calib_hist is None:
         return None
 
-    counts = torch.from_numpy(calib_hist[:]).float().cuda()
-    edges = torch.from_numpy(calib_bin_edges[:]).float().cuda()
-    centers = (edges[1:] + edges[:-1]) / 2
+    counts = torch.from_numpy(calib_hist[:]).float().cuda() #  落在各区间的数目
+    edges = torch.from_numpy(calib_bin_edges[:]).float().cuda() # 各区间的边界值(起始值)     
+    centers = (edges[1:] + edges[:-1]) / 2  # 各区间的中间值  
 
     mses = []
     arguments = []
