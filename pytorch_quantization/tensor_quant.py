@@ -367,6 +367,7 @@ def _tensor_quant(inputs, amax, num_bits=8, unsigned=False, narrow_range=True):
         if inputs.min() < 0.:
             raise TypeError("Negative values encountered in unsigned quantization.")
 
+    # 必须在FP32中进行计算，以防止潜在的溢出   
     # Computation must be in FP32 to prevent potential over flow.
     input_dtype = inputs.dtype
     if inputs.dtype == torch.half:
@@ -377,15 +378,16 @@ def _tensor_quant(inputs, amax, num_bits=8, unsigned=False, narrow_range=True):
     min_amax = amax.min()
     if min_amax < 0:
         raise ValueError("Negative values in amax")
-
+        
+    # 2^(7) -1 = 127  
     max_bound = torch.tensor((2.0**(num_bits - 1 + int(unsigned))) - 1.0, device=amax.device)
     if unsigned:
         min_bound = 0
     elif narrow_range:
-        min_bound = -max_bound
+        min_bound = -max_bound  # -127
     else:
         min_bound = -max_bound - 1
-    scale = max_bound / amax
+    scale = max_bound / amax   # 127 / amax  
 
     epsilon = 1. / (1<<24)
     if min_amax <= epsilon:  # Treat amax smaller than minimum representable of fp16 0
