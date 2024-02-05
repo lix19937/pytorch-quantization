@@ -15,3 +15,9 @@ git push -u origin main
 + 交叉熵  
 + 百分位数 
 + mse      
+
+
+稠密网络 用百分位数 calib 一定有效吗？
+
+
+除了 kl散度，还有其他衡量的指标吗？  
