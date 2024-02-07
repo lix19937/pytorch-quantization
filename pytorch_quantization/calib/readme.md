@@ -1,4 +1,4 @@
-基类     
+## 基类     
 + calibrator.py    
 
 ```py
@@ -32,7 +32,7 @@ class _Calibrator():
         return s.format(**self.__dict__)
 ```
 ------------------------------
-派生类    
+## 派生类    
 + max.py   
     class MaxCalibrator(_Calibrator):
 
