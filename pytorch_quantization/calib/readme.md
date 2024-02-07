@@ -22,9 +22,7 @@ class _Calibrator():
         raise NotImplementedError
 
     def compute_amax(self, *args, **kwargs):
-        """Abstract method: compute the amax from the collected data
-        Returns: amax: a tensor
-        """
+        # Abstract method: compute the amax from the collected data,  Returns: amax: a tensor
         raise NotImplementedError
 
     def __repr__(self):
