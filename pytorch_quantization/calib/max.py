@@ -24,13 +24,12 @@ from pytorch_quantization.calib.calibrator import _Calibrator
 from pytorch_quantization import utils as quant_utils
 
 class MaxCalibrator(_Calibrator):
-    """Max calibrator, tracks the maximum value globally
-
+    """Max calibrator, tracks the maximum value globally   
     Args:
         calib_desc: A MaxCalibDescriptor.
-        num_bits: An integer. Number of bits of quantization.
-        axis: A tuple. see QuantDescriptor.
-        unsigned: A boolean. using unsigned quantization.
+        num_bits  : An integer. Number of bits of quantization.
+        axis      : A tuple. see QuantDescriptor.
+        unsigned  : A boolean. using unsigned quantization.
 
     Readonly Properties:
         amaxs: A list of amax. Numpy array is saved as it is likely to be used for some plot.
@@ -50,12 +49,8 @@ class MaxCalibrator(_Calibrator):
 
     def collect(self, x):
         """Tracks the absolute max of all tensors
-
-        Args:
-            x: A tensor
-
-        Raises:
-            RuntimeError: If amax shape changes
+        Args: x: A tensor
+        Raises: RuntimeError: If amax shape changes
         """
         if torch.min(x) < 0.:
             logging.log_first_n(
@@ -71,6 +66,7 @@ class MaxCalibrator(_Calibrator):
         for i in range(x.dim()):
             if not i in axis:
                 reduce_axis.append(i)
+                
         local_amax = quant_utils.reduce_amax(x, axis=reduce_axis).detach()
         if self._calib_amax is None:
             self._calib_amax = local_amax
@@ -83,7 +79,6 @@ class MaxCalibrator(_Calibrator):
             self._amaxs.append(local_amax.cpu().numpy())
 
     def reset(self):
-        """Reset the collected absolute max"""
         self._calib_amax = None
 
     def compute_amax(self):
@@ -92,9 +87,7 @@ class MaxCalibrator(_Calibrator):
 
     # pylint:disable=missing-docstring
     def __str__(self):
-        s = "MaxCalibrator("
-        s += "track_amax={_track_amax}"
-        s += ")"
+        s = "MaxCalibrator(" + "track_amax={_track_amax}" + ")"
         return s.format(**self.__dict__)
 
     def __repr__(self):
