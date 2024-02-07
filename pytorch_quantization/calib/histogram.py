@@ -35,13 +35,14 @@ __all__ = ["HistogramCalibrator", "calibrate_weights"]
 
 class HistogramCalibrator(_Calibrator):
     """Unified histogram calibrator
-              执行1次收集， 基于 交叉熵 统计百分数 平方差 计算 amax  
+              执行1次直方图收集， 
+              基于 交叉熵 百分位数 平方差 计算 amax  
     Histogram will be only collected once. compute_amax() performs entropy, percentile, or mse
         calibration based on arguments
 
     Args:
         num_bits: An integer. Number of bits of quantization.
-        axis: A tuple. see QuantDescriptor.
+        axis    : A tuple. see QuantDescriptor.
         unsigned: A boolean. using unsigned quantization.
         num_bins: An integer. Number of histograms bins. Default 2048.  bins 数目   即 直方图的区间数
         grow_method: A string. DEPRECATED. default None.
