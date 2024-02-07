@@ -4,3 +4,6 @@
 
 + max.py   
     class MaxCalibrator(_Calibrator):
+
++ histogram.py    
+  class HistogramCalibrator(_Calibrator):
