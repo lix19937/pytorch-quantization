@@ -13,6 +13,7 @@ class _Calibrator():
     def __init__(self, num_bits, axis, unsigned):
         self._num_bits = num_bits; self._axis = axis; self._unsigned = unsigned
 
+    # 收集器   
     def collect(self, x):
         # Abstract method: collect tensor statistics used to compute amax
         raise NotImplementedError
@@ -21,6 +22,7 @@ class _Calibrator():
         # Abstract method: reset calibrator to initial state  
         raise NotImplementedError
 
+    # 计算
     def compute_amax(self, *args, **kwargs):
         # Abstract method: compute the amax from the collected data,  Returns: amax: a tensor
         raise NotImplementedError
