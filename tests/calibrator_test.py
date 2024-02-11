@@ -33,7 +33,6 @@ np.random.seed(12345)
 torch.manual_seed(12345)
 
 # pylint:disable=missing-docstring, no-self-use
-
 class TestMaxCalibrator():
 
     def test_simple_run(self):
