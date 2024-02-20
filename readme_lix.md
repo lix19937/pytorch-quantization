@@ -20,4 +20,7 @@ git push -u origin main
 稠密网络 用百分位数 calib 一定有效吗？
 
 
-除了 kl散度，还有其他衡量的指标吗？  
+除了 kl散度，还有其他衡量的指标吗？    
+
+
+https://github.com/NVIDIA/TensorRT/issues/3112#issuecomment-1874829560      
