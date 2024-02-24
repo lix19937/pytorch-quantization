@@ -23,4 +23,9 @@ git push -u origin main
 除了 kl散度，还有其他衡量的指标吗？    
 
 
+LLM 量化采用什么方法？  
+
+
+
+
 https://github.com/NVIDIA/TensorRT/issues/3112#issuecomment-1874829560      
