@@ -16,6 +16,8 @@ git push -u origin main
 + 百分位数 
 + mse      
 
+为什么有些网络适合ptq ? 有些却不行？   
+
 
 稠密网络 用百分位数 calib 一定有效吗？
 
