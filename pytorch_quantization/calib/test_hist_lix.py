@@ -10,13 +10,18 @@ x_np = np.array([1,2,4,6,8,9,12,34])
 _calib_hist, _calib_bin_edges = np.histogram(x_np, bins=5)
 
 logger.info("(34-1)/5={}".format(33/5))
-logger.info("_calib_bin_edges:{}".format(_calib_bin_edges))
-logger.info(_calib_hist)
+logger.info("_calib_bin_edges:{}".format(_calib_bin_edges)) # [ 1.   7.6 14.2 20.8 27.4 34. ]
+logger.info(_calib_hist) # [4 3 0 0 1]
+
+x_np = np.array([2,12,6,4,9,8,34,1])
+_calib_hist, _calib_bin_edges = np.histogram(x_np, bins=5)
+logger.info("_calib_bin_edges:{}".format(_calib_bin_edges)) # [ 1.   7.6 14.2 20.8 27.4 34. ]
+logger.info(_calib_hist) # [4 3 0 0 1]
 
 mm=np.max(x_np) 
-x_np = np.array([[1,2,4,6],[8,9,12,34]])
+x_np = np.array([[1,6,4,2],[8,9,12,34]])
 mm2=np.max(x_np) 
-logger.info("{}  {}".format(mm, mm2))
+logger.info("{}  {}".format(mm, mm2))  # 34  34
 
 # 第二个输入  
 x_np = np.array([1,0,14,16,3,9,12,45])
@@ -50,3 +55,4 @@ logger.info("space:{}".format(space))
 
 digitized_space = np.digitize(range(i), space) - 1
 logger.info("digitized_space:{}".format(digitized_space))
+
