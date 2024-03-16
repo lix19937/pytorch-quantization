@@ -36,7 +36,7 @@ torch.manual_seed(12345)
 class TestMaxCalibrator():
 
     def test_simple_run(self):
-        max_calibrator = calib.MaxCalibrator(8, None, False)
+        max_calibrator = calib.MaxCalibrator(8, None, False) # num_bits, axis, unsigned
 
         x_1 = torch.rand(129).cuda()
         x_2 = torch.rand(127).cuda()
@@ -74,6 +74,7 @@ class TestMaxCalibrator():
         x_2 = torch.rand(32, 63, 7, 7).cuda()
         x_3 = torch.rand(33, 63, 7, 7).cuda()
         max_calibrator.collect(x_2)
+        
         with pytest.raises(RuntimeError, match="shape changed"):
             max_calibrator.collect(x_3)
 
