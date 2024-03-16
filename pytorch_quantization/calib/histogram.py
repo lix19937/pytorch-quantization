@@ -283,7 +283,7 @@ def _compute_amax_mse(calib_hist, calib_bin_edges, num_bits, unsigned, stride=1,
         arguments.append(i)
 
     logging.debug("mses={}".format(mses))
-    argmin = np.argmin(mses) 
+    argmin = np.argmin(mses) # ---------------------   
     calib_amax = centers[arguments[argmin]]
     return calib_amax
 
