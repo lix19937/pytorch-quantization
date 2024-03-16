@@ -17,6 +17,7 @@ x_np = np.array([2,12,6,4,9,8,34,1])
 _calib_hist, _calib_bin_edges = np.histogram(x_np, bins=5)
 logger.info("_calib_bin_edges:{}".format(_calib_bin_edges)) # [ 1.   7.6 14.2 20.8 27.4 34. ]
 logger.info(_calib_hist) # [4 3 0 0 1]
+logger.info(_calib_hist.sum()) # [4 3 0 0 1]
 
 mm=np.max(x_np) 
 x_np = np.array([[1,6,4,2],[8,9,12,34]])
