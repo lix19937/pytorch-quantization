@@ -298,7 +298,7 @@ def _compute_amax_percentile(calib_hist, calib_bin_edges, percentile):
         return None
 
     total = calib_hist.sum() # 总的数据数目  
-    cdf = np.cumsum(calib_hist / total) # 归一化 
+    cdf = np.cumsum(calib_hist / total) # 归一化   水平方向累加  
     idx = np.searchsorted(cdf, v=percentile / 100) # 先对 cdf 升序排序，v插入到合适位置    
     calib_amax = calib_bin_edges[idx]
     calib_amax = torch.tensor(calib_amax.item()) #pylint: disable=not-callable
