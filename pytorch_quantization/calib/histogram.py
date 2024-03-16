@@ -33,10 +33,10 @@ from pytorch_quantization import utils as quant_utils
 # 权重标定    和输入无关    
 __all__ = ["HistogramCalibrator", "calibrate_weights"]
 
+# 执行1次直方图收集， 
+# 基于 交叉熵 百分位数 平方差 计算 amax 
 class HistogramCalibrator(_Calibrator):
     """Unified histogram calibrator
-              执行1次直方图收集， 
-              基于 交叉熵 百分位数 平方差 计算 amax  
     Histogram will be only collected once. compute_amax() performs entropy, percentile, or mse
         calibration based on arguments
 
@@ -74,11 +74,11 @@ class HistogramCalibrator(_Calibrator):
                 ("Calibrator encountered negative values. It shouldn't happen after ReLU. "
                  "Make sure this is the right tensor to calibrate."),
                 1)
-            x = x.abs()   # 获得整数   
+            x = x.abs()   # 获得非负数   
 
-        x = x.float()
+        x = x.float() # 转成浮点   
 
-        if not self._torch_hist:
+        if not self._torch_hist: # 使用 np 方式  ，即使用cpu 计算    
             x_np = x.cpu().detach().numpy()
 
             if self._skip_zeros:
@@ -88,7 +88,7 @@ class HistogramCalibrator(_Calibrator):
                 # first time it uses num_bins to compute histogram.
                 self._calib_hist, self._calib_bin_edges = np.histogram(x_np, bins=self._num_bins)
             else:
-                temp_amax = np.max(x_np)  # x_np的最大值，是一个单独的浮点数字   
+                temp_amax = np.max(x_np)  # temp_amax 是一个单独的浮点数字   
                 if temp_amax > self._calib_bin_edges[-1]:   # 
                     # increase the number of bins
                     width = self._calib_bin_edges[1] - self._calib_bin_edges[0]  # 计算范围     
@@ -283,7 +283,7 @@ def _compute_amax_mse(calib_hist, calib_bin_edges, num_bits, unsigned, stride=1,
         arguments.append(i)
 
     logging.debug("mses={}".format(mses))
-    argmin = np.argmin(mses)
+    argmin = np.argmin(mses) 
     calib_amax = centers[arguments[argmin]]
     return calib_amax
 
