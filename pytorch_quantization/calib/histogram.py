@@ -344,7 +344,7 @@ def calibrate_weights(model, method="percentile", perchannel=True, percentile=99
             # Histogram is always collected even if method is "max". Although "max" is supported here
             # but it is not the primary usage of this function
             if axis is None:
-                input_weights = module.weight.abs().cpu().detach().numpy()
+                input_weights = module.weight.abs().cpu().detach().numpy()  # 取绝对值  
                 calib_hist, calib_bin_edges = np.histogram(input_weights, bins=2048, range=(0, input_weights.max()))
                 calib_hist = [calib_hist]
                 calib_bin_edges = [calib_bin_edges]
