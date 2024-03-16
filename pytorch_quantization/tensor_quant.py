@@ -369,6 +369,7 @@ def _tensor_quant(inputs, amax, num_bits=8, unsigned=False, narrow_range=True):
 
     # 必须在FP32中进行计算，以防止潜在的溢出   
     # Computation must be in FP32 to prevent potential over flow.
+    
     input_dtype = inputs.dtype
     if inputs.dtype == torch.half:
         inputs = inputs.float()
@@ -387,14 +388,15 @@ def _tensor_quant(inputs, amax, num_bits=8, unsigned=False, narrow_range=True):
         min_bound = -max_bound  # -127
     else:
         min_bound = -max_bound - 1
-    scale = max_bound / amax   # 127 / amax  
+    scale = max_bound / amax    # 127 / amax  # ------------------------------------------
 
     epsilon = 1. / (1<<24)
     if min_amax <= epsilon:  # Treat amax smaller than minimum representable of fp16 0
         zero_amax_mask = (amax <= epsilon)
         scale[zero_amax_mask] = 0  # Value quantized with amax=0 should all be 0
 
-    outputs = torch.clamp((inputs * scale).round_(), min_bound, max_bound)
+    # outputs 限定在 -127 ~ 127  
+    outputs = torch.clamp((inputs * scale).round_(), min_bound, max_bound) # ------------------------------------------
 
     if min_amax <= epsilon:
         scale[zero_amax_mask] = 1.  # Return 1 makes more sense for values quantized to 0 with amax=0
