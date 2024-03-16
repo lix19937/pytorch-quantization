@@ -89,7 +89,7 @@ class HistogramCalibrator(_Calibrator):
                 self._calib_hist, self._calib_bin_edges = np.histogram(x_np, bins=self._num_bins)
             else:
                 temp_amax = np.max(x_np)  # temp_amax 是一个单独的浮点数字   
-                if temp_amax > self._calib_bin_edges[-1]:   # 
+                if temp_amax > self._calib_bin_edges[-1]:   # 如果新的输入大于 上一次输入tensor的最大值  
                     # increase the number of bins
                     width = self._calib_bin_edges[1] - self._calib_bin_edges[0]  # 计算范围     
                     # NOTE: np.arange may create an extra bin after the one containing temp_amax
