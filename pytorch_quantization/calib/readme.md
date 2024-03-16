@@ -43,4 +43,4 @@ class _Calibrator():
 + hist-mse   
 ![hist-mse](https://github.com/lix19937/pytorch-quantization/assets/38753233/60658195-3084-44b3-a08b-14473546e845)
 
-我们找到使 mse 最小的amax 即 centers[i]     
+我们找到使 `mse` 最小的amax 即 centers[i] ，这里 `start_bin =128`     
