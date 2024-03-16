@@ -248,6 +248,7 @@ class FakeTensorQuantFunction(Function):
         def legacy_quant_func():
             # The LegacyFakeTensorQuantFunction support cpu and amax with any shape that can be broadcasted to inputs.
             outputs, scale = _tensor_quant(inputs, amax, num_bits, unsigned, narrow_range)
+            # outputs / scale 从 [-127, 127] 转向float 了 
             return outputs / scale.to(inputs.dtype)
 
         if not inputs.is_cuda:
