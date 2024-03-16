@@ -17,7 +17,18 @@ x_np = np.array([2,12,6,4,9,8,34,1])
 _calib_hist, _calib_bin_edges = np.histogram(x_np, bins=5)
 logger.info("_calib_bin_edges:{}".format(_calib_bin_edges)) # [ 1.   7.6 14.2 20.8 27.4 34. ]
 logger.info(_calib_hist) # [4 3 0 0 1]
-logger.info(_calib_hist.sum()) # [4 3 0 0 1]
+logger.info(_calib_hist.sum()) #  8
+
+a=np.array([[1,2,3] ])
+b = np.cumsum(a)
+logger.info(b) #  [1 3 6]
+
+total = _calib_hist.sum() # 总的数据数目  
+cdf = np.cumsum(_calib_hist / total) # 归一化 
+idx = np.searchsorted(cdf, v=99.9 / 100) # 先对 cdf 升序排序，v插入到合适位置  
+logger.info(total) #  8
+logger.info(cdf) #  [0.5   0.875 0.875 0.875 1.   ]
+logger.info(idx) #  4
 
 mm=np.max(x_np) 
 x_np = np.array([[1,6,4,2],[8,9,12,34]])
