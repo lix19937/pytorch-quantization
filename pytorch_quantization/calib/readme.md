@@ -38,3 +38,8 @@ class _Calibrator():
 
 + histogram.py    
   class HistogramCalibrator(_Calibrator):
+
+------------------   
++ hist-mse   
+![hist-mse](https://github.com/lix19937/pytorch-quantization/assets/38753233/60658195-3084-44b3-a08b-14473546e845)
+
