@@ -9,7 +9,7 @@ from loguru import logger
 x_np = np.array([1,2,4,6,8,9,12,34])
 _calib_hist, _calib_bin_edges = np.histogram(x_np, bins=5)
 
-logger.info("(34-1)/5={}".format(33/5))
+logger.info("(34-1)/5={}".format(33/5)) # 6.6
 logger.info("_calib_bin_edges:{}".format(_calib_bin_edges)) # [ 1.   7.6 14.2 20.8 27.4 34. ]
 logger.info(_calib_hist) # [4 3 0 0 1]
 
