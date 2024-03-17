@@ -6,12 +6,6 @@ PyTorch-Quantization is a toolkit for training and evaluating PyTorch models wit
 
 ## Install
 
-#### Binaries
-
-```bash
-pip install pytorch-quantization --extra-index-url https://pypi.ngc.nvidia.com
-```
-
 #### From Source
 
 ```bash
@@ -33,10 +27,6 @@ Build and install pytorch-quantization
 # Python version >= 3.7, GCC version >= 5.4 required
 python setup.py install
 ```
-
-#### NGC Container
-
-`pytorch-quantization` is preinstalled in NVIDIA NGC PyTorch container, e.g. `nvcr.io/nvidia/pytorch:22.12-py3`
 
 ## Resources
 
