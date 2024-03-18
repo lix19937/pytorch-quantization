@@ -30,11 +30,11 @@ from pytorch_quantization.tensor_quant import fake_tensor_quant
 from pytorch_quantization import nn as quant_nn
 from pytorch_quantization import utils as quant_utils
 
-# 权重标定    和输入无关    
+# 这里实际可以改进  
 __all__ = ["HistogramCalibrator", "calibrate_weights"]
 
-# 执行1次直方图收集， 
-# 基于 交叉熵 百分位数 平方差 计算 amax 
+# step1 执行1次直方图收集分布  
+# step2 基于 (交叉熵, 百分位数, 平方差) 计算 amax 
 class HistogramCalibrator(_Calibrator):
     """Unified histogram calibrator
     Histogram will be only collected once. compute_amax() performs entropy, percentile, or mse
@@ -140,7 +140,7 @@ class HistogramCalibrator(_Calibrator):
         Returns:
             amax: a tensor
         """
-        if isinstance(self._calib_hist, torch.Tensor): # 是tensor 类型时候转numpy     
+        if isinstance(self._calib_hist, torch.Tensor): # 是 tensor 类型时候需要转numpy     
             calib_hist = self._calib_hist.int().cpu().numpy()
             calib_bin_edges = self._calib_bin_edges.cpu().numpy()
         else:
@@ -217,7 +217,7 @@ def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, strid
 
     for i in range(starting, stop + 1, stride):
         new_density_counts.fill(0)
-        space = np.linspace(0, i, num=nbins + 1)  #  存在浮点  
+        space = np.linspace(0, i, num=nbins + 1)  #  浮点数据    
         digitized_space = np.digitize(range(i), space) - 1  # 
 
         digitized_space[bins[:i] == 0] = -1
@@ -249,13 +249,13 @@ def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, strid
 
         _normalize_distr(reference_density)
 
-        ent = entropy(reference_density, new_density)
+        ent = entropy(reference_density, new_density) # -----------
         divergences.append(ent)
         arguments.append(i)
 
     divergences = np.array(divergences)
     logging.debug("divergences={}".format(divergences))
-    last_argmin = len(divergences) - 1 - np.argmin(divergences[::-1])
+    last_argmin = len(divergences) - 1 - np.argmin(divergences[::-1]) # 
     calib_amax = calib_bin_edges[last_argmin * stride + starting]
     calib_amax = torch.tensor(calib_amax.item()) #pylint: disable=not-callable
 
