@@ -237,7 +237,7 @@ def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, strid
                 new_density[idx] = new_density_counts[digitized]
 
         total_counts_new = np.sum(new_density) + np.sum(bins[i:])
-        _normalize_distr(new_density)
+        _normalize_distr(new_density)#
 
         reference_density = np.array(bins[:len(digitized_space)])
         reference_density[-1] += np.sum(bins[i:])
@@ -247,8 +247,9 @@ def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, strid
             raise RuntimeError("Count mismatch! total_counts_new={}, total_counts_old={}, total_data={}".format(
                 total_counts_new, total_counts_old, total_data))
 
-        _normalize_distr(reference_density)
+        _normalize_distr(reference_density) #
 
+        # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html   
         ent = entropy(reference_density, new_density) # -----------
         divergences.append(ent)
         arguments.append(i)
