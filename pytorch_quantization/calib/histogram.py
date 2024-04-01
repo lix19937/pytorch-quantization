@@ -207,7 +207,7 @@ def _compute_amax_entropy(calib_hist, calib_bin_edges, num_bits, unsigned, strid
     divergences = []
     arguments = []
 
-    # we are quantizing to 128 values + sign if num_bits=8
+    # we are quantizing to 128 values + sign if num_bits=8    int(unsigned) = int(False) = 0     
     nbins = 1 << (num_bits - 1 + int(unsigned))
 
     starting = start_bin
