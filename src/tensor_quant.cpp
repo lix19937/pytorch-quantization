@@ -21,6 +21,7 @@ void fake_tensor_quant_cuda_inplace(at::Tensor, at::Tensor, int, bool, bool);
 at::Tensor fake_tensor_quant_cuda(at::Tensor, at::Tensor, int, bool, bool);
 at::Tensor fake_tensor_quant_with_axis_cuda(at::Tensor, at::Tensor, int, int, bool, bool);
 float bits_to_bound(int, int);
+// 以上函数都是在 tensor_quant_gpu.cu 中定义实现的     
 
 void fake_tensor_quant_(at::Tensor inputs, at::Tensor amax, int num_bits = 8,
                         bool is_unsigned = false, bool narrow_range = true) {
