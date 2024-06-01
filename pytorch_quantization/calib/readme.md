@@ -1,36 +1,40 @@
 ## 基类     
 + calibrator.py    
+    <details>
+    <summary> </summary>
+    <pre><code class="language-python">
+    class _Calibrator():
+        """Abstract base class of calibrators
+        Args:
+            num_bits: An integer. Number of bits of quantization.
+            axis    : A tuple. see QuantDescriptor.
+            unsigned: A boolean. using unsigned quantization.
+        Readonly Properties: axis:
+        """
+        def __init__(self, num_bits, axis, unsigned):
+            self._num_bits = num_bits; self._axis = axis; self._unsigned = unsigned
+    
+        # 收集器   
+        def collect(self, x):
+            # Abstract method: collect tensor statistics used to compute amax
+            raise NotImplementedError
+    
+        def reset(self):
+            # Abstract method: reset calibrator to initial state  
+            raise NotImplementedError
+    
+        # 计算
+        def compute_amax(self, *args, **kwargs):
+            # Abstract method: compute the amax from the collected data,  Returns: amax: a tensor
+            raise NotImplementedError
+    
+        def __repr__(self):
+            s = "num_bits={_num_bits}"; s += " axis={_axis}"; s += " unsigned={_unsigned}"
+            return s.format(**self.__dict__)
+    </code></pre>
+    </details>
 
-```py
-class _Calibrator():
-    """Abstract base class of calibrators
-    Args:
-        num_bits: An integer. Number of bits of quantization.
-        axis    : A tuple. see QuantDescriptor.
-        unsigned: A boolean. using unsigned quantization.
-    Readonly Properties: axis:
-    """
-    def __init__(self, num_bits, axis, unsigned):
-        self._num_bits = num_bits; self._axis = axis; self._unsigned = unsigned
 
-    # 收集器   
-    def collect(self, x):
-        # Abstract method: collect tensor statistics used to compute amax
-        raise NotImplementedError
-
-    def reset(self):
-        # Abstract method: reset calibrator to initial state  
-        raise NotImplementedError
-
-    # 计算
-    def compute_amax(self, *args, **kwargs):
-        # Abstract method: compute the amax from the collected data,  Returns: amax: a tensor
-        raise NotImplementedError
-
-    def __repr__(self):
-        s = "num_bits={_num_bits}"; s += " axis={_axis}"; s += " unsigned={_unsigned}"
-        return s.format(**self.__dict__)
-```
 ------------------------------
 ## 派生类    
 + max.py   
