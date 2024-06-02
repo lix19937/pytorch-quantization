@@ -342,6 +342,7 @@ def calibrate_weights(model, method="percentile", perchannel=True, percentile=99
                 axis = None
             axis_size = module.weight.shape[axis] if axis is not None else 1
 
+            ######### 直方图统计   
             # Histogram is always collected even if method is "max". Although "max" is supported here
             # but it is not the primary usage of this function
             if axis is None:
@@ -359,6 +360,7 @@ def calibrate_weights(model, method="percentile", perchannel=True, percentile=99
                     calib_hist.append(hist)
                     calib_bin_edges.append(bin_edges)
 
+            ##### 计算amax    
             calib_amax = []
             if method == "max":
                 reduce_axis = list(range(module.weight.dim()))
