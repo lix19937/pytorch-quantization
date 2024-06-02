@@ -23,6 +23,7 @@ import torch
 from pytorch_quantization.calib.calibrator import _Calibrator
 from pytorch_quantization import utils as quant_utils
 
+# _Calibrator 是基类  
 class MaxCalibrator(_Calibrator):
     """Max calibrator, tracks the maximum value globally   
     Args:
