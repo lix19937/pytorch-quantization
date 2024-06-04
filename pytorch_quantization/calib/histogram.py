@@ -336,7 +336,7 @@ def calibrate_weights(model, method="percentile", perchannel=True, percentile=99
                 quant_nn.QuantConvTranspose2d,
                 quant_nn.QuantConvTranspose3d
             )
-            if perchannel:
+            if perchannel:    # 这里 转置卷积 的axis 设置 有 bug  
                 axis = 1 if isinstance(module, channel_second_modules) else 0
             else:
                 axis = None
