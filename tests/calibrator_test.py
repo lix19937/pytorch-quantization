@@ -405,9 +405,11 @@ class TestCalibrateWeights():
 
         ref_calibrator = calib.HistogramCalibrator(8, None, False)
 
-        calib.calibrate_weights(test_lenet, method="percentile", perchannel=True, percentile=test_percentile)
+        calib.calibrate_weights(test_lenet, method="percentile", perchannel=True, percentile=test_percentile)  # 类似 static api  
+        
         ref_calibrator.collect(test_lenet.conv2.weight[1])
-        ref_amax = ref_calibrator.compute_amax("percentile", percentile=test_percentile)
+        ref_amax = ref_calibrator.compute_amax("percentile", percentile=test_percentile)  # 类似 static api 
+        
         test_utils.compare(ref_amax, test_lenet.conv2.weight_quantizer.amax[1], rtol=0, atol=0, ctol=0)
 
     def test_mse(self):
@@ -418,7 +420,7 @@ class TestCalibrateWeights():
 
         calib.calibrate_weights(test_lenet, method="mse", perchannel=False)  # 对整个模型  
         
-        ref_calibrator.collect(test_lenet.conv1.weight) # 单独对模型的某一层权重   
+        ref_calibrator.collect(test_lenet.conv1.weight) # 单独对模型的某一层权重   per tensor   
         ref_amax = ref_calibrator.compute_amax("mse")
         
         test_utils.compare(ref_amax, test_lenet.conv1.weight_quantizer.amax, rtol=0, atol=0, ctol=0)
