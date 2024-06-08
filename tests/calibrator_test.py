@@ -42,13 +42,13 @@ class TestMaxCalibrator():
         x_2 = torch.rand(127).cuda()
         max_calibrator.collect(x_1)
         max_calibrator.collect(x_2)
-
+        print("amax:", max_calibrator.compute_amax())
         test_utils.compare(max_calibrator.compute_amax(), torch.max(x_1.max(), x_2.max()), atol=0, rtol=0, ctol=0)
 
         # Nothing to test other than creation
         max_calibrator = calib.MaxCalibrator(8, None, True)
 
-    def test_fine_grain(self):
+    def test_fine_grain(self): # 细粒度   
         axis = 0
         reducs_axis = (1, 2, 3)
         max_calibrator = calib.MaxCalibrator(8, axis, False)
@@ -58,6 +58,7 @@ class TestMaxCalibrator():
         max_calibrator.collect(x_1)
         max_calibrator.collect(x_2)
 
+        print("shape:", max_calibrator.compute_amax().shape)
         assert max_calibrator.compute_amax().shape[0] == 31
 
         test_utils.compare(max_calibrator.compute_amax(),
