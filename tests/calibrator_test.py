@@ -29,6 +29,8 @@ import tests.utils as test_utils
 from tests.fixtures import verbose
 from tests.fixtures.models import QuantLeNet
 
+from loguru import logger 
+
 np.random.seed(12345)
 torch.manual_seed(12345)
 
@@ -42,7 +44,7 @@ class TestMaxCalibrator():
         x_2 = torch.rand(127).cuda()
         max_calibrator.collect(x_1)
         max_calibrator.collect(x_2)
-        print("amax:", max_calibrator.compute_amax())
+        logger.info("amax:", max_calibrator.compute_amax())
         test_utils.compare(max_calibrator.compute_amax(), torch.max(x_1.max(), x_2.max()), atol=0, rtol=0, ctol=0)
 
         # Nothing to test other than creation
@@ -50,7 +52,7 @@ class TestMaxCalibrator():
 
     def test_fine_grain(self): # 细粒度   
         axis = 0
-        reducs_axis = (1, 2, 3)
+        reduces_axis = (1, 2, 3)
         max_calibrator = calib.MaxCalibrator(8, axis, False)
 
         x_1 = torch.rand(31, 63, 7, 7).cuda()
@@ -62,7 +64,7 @@ class TestMaxCalibrator():
         assert max_calibrator.compute_amax().shape[0] == 31
 
         test_utils.compare(max_calibrator.compute_amax(),
-                           quant_utils.reduce_amax(torch.max(x_1, x_2), axis=reducs_axis),
+                           quant_utils.reduce_amax(torch.max(x_1, x_2), axis=reduces_axis),
                            atol=0, rtol=0, ctol=0)
 
         max_calibrator.reset()
@@ -75,6 +77,7 @@ class TestMaxCalibrator():
         x_2 = torch.rand(32, 63, 7, 7).cuda()
         x_3 = torch.rand(33, 63, 7, 7).cuda()
         max_calibrator.collect(x_2)
+        logger.info(max_calibrator._calib_amax)
         
         with pytest.raises(RuntimeError, match="shape changed"):
             max_calibrator.collect(x_3)
@@ -100,7 +103,7 @@ class TestHistogramCalibrator():
     def test_grow(self, verbose):
         x_1 = torch.tensor([0, 255, 255, 255, 255, 255]).cuda()
         x_2 = torch.tensor([0, 255, 255, 255, 255, 256]).cuda()
-
+                                                  # num_bits=8,  axis=None  unsigned=False  
         hist_calibrator = calib.HistogramCalibrator(8, None, False, grow_method='stretch')
         hist_calibrator.collect(x_1)
         hist_calibrator.collect(x_2)
