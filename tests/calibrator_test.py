@@ -113,7 +113,8 @@ class TestHistogramCalibrator():
         if verbose:
             print('amax={:.4f}'.format(amax.item()), end=' ')
 
-        # amax should be closer to 256 because the last bin gets stretched to (~255, 257)
+        print(">>>", (amax - 255.).abs(), (amax - 256.).abs())
+        # amax should be closer to 256 ?, because the last bin gets stretched to (~255, 257)
         assert (amax - 255.).abs() < (amax - 256.).abs()
 
         hist_calibrator = calib.HistogramCalibrator(8, None, False, grow_method='append')
@@ -150,7 +151,7 @@ class TestHistogramCalibrator():
         x_2 = torch.rand(1023, device="cuda") + 1  # Make sure histogram bins need to be grown
         x_2[1] = 0
 
-        calibrator_np = calib.HistogramCalibrator(8, None, False, num_bins=19, torch_hist=False)
+        calibrator_np    = calib.HistogramCalibrator(8, None, False, num_bins=19, torch_hist=False)
         calibrator_torch = calib.HistogramCalibrator(8, None, False, num_bins=19, torch_hist=True)
 
         calibrator_np.collect(x_1)
@@ -163,8 +164,9 @@ class TestHistogramCalibrator():
         # Test multiple collections with some of them needs to expand range
         for _ in range(3):
             calibrator_np.collect(x_2)
-            calibrator_torch.collect(x_2)
             calibrator_np.collect(x_1)
+            
+            calibrator_torch.collect(x_2)
             calibrator_torch.collect(x_1)
 
             # Test compute_amax function doesn't convert _calib_hist and _calib_bin_edges unnecessarily
