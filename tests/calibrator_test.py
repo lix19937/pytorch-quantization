@@ -426,11 +426,11 @@ class TestCalibrateWeights():
         torch.manual_seed(12345)
         test_lenet = QuantLeNet()
 
-        calib.calibrate_weights(test_lenet, method="mse", perchannel=False)  # 对整个模型  按tensor    
+        calib.calibrate_weights(test_lenet, method="mse", perchannel=False)  # 对整个模型 按tensor    
 
         ref_calibrator = calib.HistogramCalibrator(8, None, False)
-        ref_calibrator.collect(test_lenet.conv1.weight) # 单独对模型的某一层权重   per tensor   
-        ref_amax       = ref_calibrator.compute_amax("mse")
+        ref_calibrator.collect(test_lenet.conv1.weight)     # 单独对模型的某一层权重 按 tensor 收集  
+        ref_amax       = ref_calibrator.compute_amax("mse") # 计算max  
         
         test_utils.compare(ref_amax, test_lenet.conv1.weight_quantizer.amax, rtol=0, atol=0, ctol=0)
 
