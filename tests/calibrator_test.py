@@ -405,9 +405,12 @@ class TestCalibrateWeights():
         calib.calibrate_weights(test_lenet, method="percentile", perchannel=False, percentile=test_percentile)
         
         ref_calibrator = calib.HistogramCalibrator(8, None, False)
-        ref_calibrator.collect(test_lenet.conv1.weight)
+        pass;            ref_calibrator.collect(test_lenet.conv1.weight)
         ref_amax       = ref_calibrator.compute_amax("percentile", percentile=test_percentile)
-        test_utils.compare(ref_amax, test_lenet.conv1.weight_quantizer.amax, rtol=0, atol=0, ctol=0)
+        
+        test_utils.compare(ref_amax, 
+                           test_lenet.conv1.weight_quantizer.amax, 
+                           rtol=0, atol=0, ctol=0)
 
     def test_percentile_with_axis(self):
         torch.manual_seed(12345)
@@ -417,7 +420,7 @@ class TestCalibrateWeights():
         calib.calibrate_weights(test_lenet, method="percentile", perchannel=True, percentile=test_percentile)  # 类似 static api  
 
         ref_calibrator = calib.HistogramCalibrator(8, None, False)
-        ref_calibrator.collect(test_lenet.conv2.weight[1])
+        pass;            ref_calibrator.collect(test_lenet.conv2.weight[1])
         ref_amax       = ref_calibrator.compute_amax("percentile", percentile=test_percentile)  # 类似 static api 
         
         test_utils.compare(ref_amax, test_lenet.conv2.weight_quantizer.amax[1], rtol=0, atol=0, ctol=0)
@@ -429,8 +432,8 @@ class TestCalibrateWeights():
         calib.calibrate_weights(test_lenet, method="mse", perchannel=False)  # 对整个模型 按tensor    
 
         ref_calibrator = calib.HistogramCalibrator(8, None, False)
-        ref_calibrator.collect(test_lenet.conv1.weight)     # 单独对模型的某一层权重 按 tensor 收集  
-        ref_amax       = ref_calibrator.compute_amax("mse") # 计算max  
+        pass;      ref_calibrator.collect(test_lenet.conv1.weight)     # 单独对模型的某一层权重 按 tensor 收集  
+        ref_amax = ref_calibrator.compute_amax("mse") # 计算max  
         
         test_utils.compare(ref_amax, test_lenet.conv1.weight_quantizer.amax, rtol=0, atol=0, ctol=0)
 
@@ -441,7 +444,7 @@ class TestCalibrateWeights():
         calib.calibrate_weights(test_lenet, method="mse", perchannel=True)
 
         ref_calibrator = calib.HistogramCalibrator(8, None, False)
-        ref_calibrator.collect(test_lenet.conv2.weight[1]) # 单独对模型某一层卷积权重的某一通道  
-        ref_amax       = ref_calibrator.compute_amax("mse")
+        pass;      ref_calibrator.collect(test_lenet.conv2.weight[1]) # 单独对模型某一层卷积权重的某一通道  
+        ref_amax = ref_calibrator.compute_amax("mse")
         
         test_utils.compare(ref_amax, test_lenet.conv2.weight_quantizer.amax[1], rtol=0, atol=0, ctol=0)
