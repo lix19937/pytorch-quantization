@@ -429,7 +429,7 @@ class TestCalibrateWeights():
 
         ref_calibrator = calib.HistogramCalibrator(8, None, False)
 
-        calib.calibrate_weights(test_lenet, method="mse", perchannel=False)  # 对整个模型  
+        calib.calibrate_weights(test_lenet, method="mse", perchannel=False)  # 对整个模型  按tensor    
         
         ref_calibrator.collect(test_lenet.conv1.weight) # 单独对模型的某一层权重   per tensor   
         ref_amax = ref_calibrator.compute_amax("mse")
@@ -444,7 +444,7 @@ class TestCalibrateWeights():
 
         calib.calibrate_weights(test_lenet, method="mse", perchannel=True)
         
-        ref_calibrator.collect(test_lenet.conv2.weight[1]) # 单独对模型的某一层权重的某一通道  
+        ref_calibrator.collect(test_lenet.conv2.weight[1]) # 单独对模型某一层卷积权重的某一通道  
         ref_amax = ref_calibrator.compute_amax("mse")
         
         test_utils.compare(ref_amax, test_lenet.conv2.weight_quantizer.amax[1], rtol=0, atol=0, ctol=0)
