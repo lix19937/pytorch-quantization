@@ -75,7 +75,7 @@ class TestMaxCalibrator():
         max_calibrator = calib.MaxCalibrator(8, axis, False)
 
         x_2 = torch.rand(32, 63, 7, 7).cuda()
-        x_3 = torch.rand(33, 63, 7, 7).cuda()
+        x_3 = torch.rand(33, 63, 7, 7).cuda() # 
         max_calibrator.collect(x_2)
         logger.info(max_calibrator._calib_amax)
         
@@ -102,7 +102,7 @@ class TestHistogramCalibrator():
 
     def test_grow(self, verbose):
         x_1 = torch.tensor([0, 255, 255, 255, 255, 255]).cuda()
-        x_2 = torch.tensor([0, 255, 255, 255, 255, 256]).cuda()
+        x_2 = torch.tensor([0, 255, 255, 255, 255, 256]).cuda() #  
                                                   # num_bits=8,  axis=None  unsigned=False  
         hist_calibrator = calib.HistogramCalibrator(8, None, False, grow_method='stretch')
         hist_calibrator.collect(x_1)
@@ -358,19 +358,22 @@ class TestCalibrateWeights():
         torch.manual_seed(12345)
         test_lenet = QuantLeNet()
 
-        for module in ref_lenet.modules():
+        for module in ref_lenet.modules():  # ref  
             if isinstance(module, (quant_nn.QuantConv2d, quant_nn.QuantLinear)):
                 module.weight_quantizer.enable_calib()
                 module.weight_quantizer.disable_quant()
-                module.weight_quantizer(module.weight)
+                module.weight_quantizer(module.weight) #
                 module.weight_quantizer.load_calib_amax()
 
-        calib.calibrate_weights(test_lenet, method="max")
+        calib.calibrate_weights(test_lenet, method="max")  # test  
 
         for ref_module, test_module in zip(ref_lenet.modules(), test_lenet.modules()):
             if isinstance(ref_module, (quant_nn.QuantConv2d, quant_nn.QuantLinear)):
+                # amax val 
                 test_utils.compare(
-                    ref_module.weight_quantizer.amax, test_module.weight_quantizer.amax, rtol=0, atol=0, ctol=0)
+                    ref_module.weight_quantizer.amax, 
+                    test_module.weight_quantizer.amax, 
+                    rtol=0, atol=0, ctol=0)
                 assert ref_module.weight_quantizer.amax.shape == test_module.weight_quantizer.amax.shape
 
     def test_shape_with_axis(self):
@@ -391,6 +394,7 @@ class TestCalibrateWeights():
 
         for ref_module, test_module in zip(ref_lenet.modules(), test_lenet.modules()):
             if isinstance(ref_module, (quant_nn.QuantConv2d, quant_nn.QuantLinear)):
+                # shape compare
                 assert ref_module.weight_quantizer.amax.shape == test_module.weight_quantizer.amax.shape
 
     def test_percentile(self):
