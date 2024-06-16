@@ -33,7 +33,7 @@ torch.manual_seed(1234)
 
 # pylint:disable=missing-docstring, no-self-use
 
-# 截断   
+# limit a range     
 
 class TestClip():
 
