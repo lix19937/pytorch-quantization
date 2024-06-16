@@ -31,3 +31,6 @@ LLM 量化采用什么方法？
 对比 trt10.0.1 版本差异     
 
 https://github.com/NVIDIA/TensorRT/issues/3112#issuecomment-1874829560      
+
+https://github.com/lix19937/pytorch-quantization/blob/main/tests/integration_test.py#L177   
+
