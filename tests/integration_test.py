@@ -85,7 +85,7 @@ class TestNetwork():
         model = QuantLeNet(quant_desc_input=input_desc, quant_desc_weight=weight_desc)
         optimizer = optim.SGD(model.parameters(), lr=0.01)
         optimizer.zero_grad()
-        with torch.cuda.amp.autocast():
+        with torch.cuda.amp.autocast():###
             output = model(torch.empty(16, 1, 28, 28))
             loss = F.nll_loss(output, torch.randint(10, (16,), dtype=torch.int64))
         loss.backward()
@@ -181,8 +181,8 @@ class TestNetwork():
         for name, module in quant_model.named_modules():
             if name.endswith("_quantizer"):
                 if module._calibrator is not None:
-                    module.disable_quant()
-                    module.enable_calib()
+                    module.disable_quant() # close quant set 
+                    module.enable_calib()  # do calib  
                 else:
                     module.disable()
                 print(F"{name:40}: {module}")
@@ -193,8 +193,8 @@ class TestNetwork():
         for name, module in quant_model.named_modules():
             if name.endswith("_quantizer"):
                 if module._calibrator is not None:
-                    module.load_calib_amax()
-                    module.enable_quant()
+                    module.load_calib_amax() # load amax 
+                    module.enable_quant() # open quant set 
                     module.disable_calib()
                 else:
                     module.enable()
