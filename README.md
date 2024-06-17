@@ -1,7 +1,5 @@
 PyTorch-Quantization is a toolkit for training and evaluating PyTorch models with simulated quantization. Quantization can be added to the model automatically, or manually, allowing the model to be tuned for accuracy and performance. Quantization is compatible with NVIDIAs high performance integer kernels which leverage integer Tensor Cores. The quantized model can be exported to ONNX and imported by TensorRT 8.0 and later.
 
-PyTorch Quantization 是一个用于训练和评估具有模拟量化的PyTorch模型的工具包。量化可以自动或手动添加到模型中，允许对模型进行精度和性能调整。量化与NVIDIA高性能整型内核兼容，后者利用整型张量内核。量化模型可以导出到ONNX，并通过TensorRT 8.0及更高版本导入。
-
 ## Install From Source
 
 ```bash
